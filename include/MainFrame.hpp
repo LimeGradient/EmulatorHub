@@ -9,5 +9,7 @@ namespace EmuHub {
 
     private:
         void OnExit(wxCommandEvent& event);
+
+        
     };
 }

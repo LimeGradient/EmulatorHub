@@ -2,11 +2,16 @@
 
 #include <wx/wx.h>
 
+#include <MainFrame.hpp>
+
 namespace EmuHub {
     class MainWindow : public wxApp {
     public:
         bool OnInit() override;
+    
+    private:
+        MainFrame* frame;
     };
-
-    wxIMPLEMENT_APP(MainWindow);
 }
+
+wxIMPLEMENT_APP(EmuHub::MainWindow);
