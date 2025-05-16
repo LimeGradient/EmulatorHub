@@ -2,9 +2,11 @@
 
 #include <wx/wx.h>
 
-class MainWindow : public wxApp {
-public:
-    bool OnInit() override;
-};
+namespace EmuHub {
+    class MainWindow : public wxApp {
+    public:
+        bool OnInit() override;
+    };
 
-wxIMPLEMENT_APP(MainWindow);
+    wxIMPLEMENT_APP(MainWindow);
+}

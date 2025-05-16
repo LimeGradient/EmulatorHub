@@ -2,10 +2,12 @@
 
 #include <wx/wx.h>
 
-class MainFrame : public wxFrame {
-public:
-    MainFrame();
+namespace EmuHub {
+    class MainFrame : public wxFrame {
+    public:
+        MainFrame();
 
-private:
-    void OnExit(wxCommandEvent& event);
-};
+    private:
+        void OnExit(wxCommandEvent& event);
+    };
+}
