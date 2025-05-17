@@ -1,5 +1,8 @@
 #include <MainFrame.hpp>
 
+#include <fmt/format.h>
+#include <config/ApplicationConfig.hpp>
+
 namespace EmuHub {
     MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "Emulator Hub") {
         SetSize(1280, 720);
@@ -13,7 +16,7 @@ namespace EmuHub {
 
         SetMenuBar(menuBar);
         CreateStatusBar();
-        SetStatusText("Welcome to wxWidgets!");
+        SetStatusText(fmt::format("Welcome to EmulatorHub Version {}", ApplicationConfig::get()->version));
 
         Bind(wxEVT_MENU, &MainFrame::OnExit, this, wxID_EXIT);
 

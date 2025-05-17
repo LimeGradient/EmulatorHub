@@ -2,6 +2,7 @@
 
 #include <string>
 #include <map>
+#include <vector>
 
 #include <roms/types/DATGame.hpp>
 #include <roms/types/ConsoleTypes.hpp>

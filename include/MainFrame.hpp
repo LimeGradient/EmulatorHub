@@ -8,8 +8,6 @@ namespace EmuHub {
         MainFrame();
 
     private:
-        void OnExit(wxCommandEvent& event);
-
-        
+        void OnExit(wxCommandEvent& event);       
     };
 }

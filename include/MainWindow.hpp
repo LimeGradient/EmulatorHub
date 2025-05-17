@@ -13,5 +13,3 @@ namespace EmuHub {
         MainFrame* frame;
     };
 }
-
-wxIMPLEMENT_APP(EmuHub::MainWindow);
