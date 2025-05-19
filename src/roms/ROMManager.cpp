@@ -1,13 +1,45 @@
 #include "roms/ROMManager.hpp"
 
 #include <fstream>
+#include <filesystem>
 #include <sstream>
 #include <iomanip>
-#include <openssl/sha.h>
 
+#include <glaze/glaze.hpp>
+#include <openssl/sha.h>
+#include <spdlog/spdlog.h>
+
+#include <config/ApplicationConfig.hpp>
 #include <roms/parsers/DATParser.hpp>
 
+namespace fs = std::filesystem;
+
 namespace EmuHub {
+    void ROMManager::init() {
+        config = ApplicationConfig::get();
+
+        if (!fs::exists("./config") || !fs::is_directory("./config")) {
+            fs::create_directory("./config");
+        } else {
+            if (fs::exists("./config/config.json")) {
+                std::ifstream file("./config/config.json");
+                std::stringstream rawFileContents;
+                rawFileContents << file.rdbuf();
+                std::string fileContents = rawFileContents.str();
+                file.close();
+
+                auto ec = glz::read_json(config->configFile, fileContents);
+            } else {
+                config->configFile = ConfigFile();
+            }
+        }
+    }
+
+
+    void ROMManager::addROMPath(std::string path) {
+        config->configFile.romPaths.push_back(path);
+    }
+
     bool ROMManager::checkROMHash(std::string romPath) {
         std::ifstream file(romPath, std::ios::binary);
         if (!file.is_open()) {
@@ -56,5 +88,14 @@ namespace EmuHub {
         }
 
         return false;
+    }
+
+    ROMManager::~ROMManager() {
+        std::string buffer = glz::write_json(config->configFile).value_or("error");
+        std::ofstream file("./config/config.json");
+        if (file.is_open()) {
+            file << buffer << std::endl;
+            file.close();
+        }
     }
 }

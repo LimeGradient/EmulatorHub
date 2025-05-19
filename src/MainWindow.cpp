@@ -8,6 +8,7 @@
 namespace EmuHub {
     bool MainWindow::OnInit() {
         DATParser::get()->loadFile("./datfiles/ds.dat", ConsoleType::NintendoDS);
+        ROMManager::get()->init();
 
         frame = new MainFrame();
         frame->Show();
