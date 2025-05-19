@@ -16,6 +16,6 @@ namespace EmuHub {
         }
 
         std::string version = "0.1.0";
-        ConfigFile configFile;
+        ConfigFile configFile = ConfigFile();
     };
 }

@@ -12,8 +12,6 @@
 namespace EmuHub {
     class ROMManager {
     public:
-        ~ROMManager();
-
         static ROMManager* get() {
             static ROMManager instance;
             return &instance;
@@ -23,6 +21,8 @@ namespace EmuHub {
 
         void addROMPath(std::string path);
         bool checkROMHash(std::string romPath);
+
+        std::vector<std::string> getLoadedROMPaths();
     
     private:
         ApplicationConfig* config;

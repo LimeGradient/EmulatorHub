@@ -10,6 +10,7 @@ namespace EmuHub {
         MainFrame();
 
     private:
+        void OnClose(wxCloseEvent& event);
         void OnExit(wxCommandEvent& event); 
         void OnAddROMPath(wxCommandEvent& event);
 

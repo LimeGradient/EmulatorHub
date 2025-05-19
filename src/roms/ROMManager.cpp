@@ -28,7 +28,8 @@ namespace EmuHub {
                 std::string fileContents = rawFileContents.str();
                 file.close();
 
-                auto ec = glz::read_json(config->configFile, fileContents);
+                glz::read_json(config->configFile, fileContents);
+                romPaths = config->configFile.romPaths;
             } else {
                 config->configFile = ConfigFile();
             }
@@ -37,7 +38,7 @@ namespace EmuHub {
 
 
     void ROMManager::addROMPath(std::string path) {
-        config->configFile.romPaths.push_back(path);
+        romPaths.push_back(path);
     }
 
     bool ROMManager::checkROMHash(std::string romPath) {
@@ -90,12 +91,7 @@ namespace EmuHub {
         return false;
     }
 
-    ROMManager::~ROMManager() {
-        std::string buffer = glz::write_json(config->configFile).value_or("error");
-        std::ofstream file("./config/config.json");
-        if (file.is_open()) {
-            file << buffer << std::endl;
-            file.close();
-        }
+    std::vector<std::string> ROMManager::getLoadedROMPaths() {
+        return romPaths;
     }
 }

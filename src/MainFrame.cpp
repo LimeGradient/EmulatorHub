@@ -1,5 +1,6 @@
 #include <MainFrame.hpp>
 
+#include <glaze/glaze.hpp>
 #include <fmt/format.h>
 #include <spdlog/spdlog.h>
 
@@ -24,6 +25,8 @@ namespace EmuHub {
         CreateStatusBar();
         SetStatusText(fmt::format("Welcome to EmulatorHub Version {}", ApplicationConfig::get()->version));
 
+        Bind(wxEVT_CLOSE_WINDOW, &MainFrame::OnClose, this);
+
         Bind(wxEVT_MENU, &MainFrame::OnAddROMPath, this, ID_AddROMPath);
         Bind(wxEVT_MENU, &MainFrame::OnExit, this, wxID_EXIT);
 
@@ -34,6 +37,20 @@ namespace EmuHub {
         GameList* gameList = new GameList(this, wxID_ANY);
         sizer->Add(gameList, 1, wxEXPAND);
         this->SetSizer(sizer);
+    }
+
+    void MainFrame::OnClose(wxCloseEvent& event) {
+        auto config = ApplicationConfig::get();
+        config->configFile.romPaths = romManager->getLoadedROMPaths();
+
+        std::string buffer = glz::write_json(config->configFile).value_or("error");
+        std::ofstream file("./config/config.json");
+        if (file.is_open()) {
+            file << buffer << std::endl;
+            file.close();
+        }
+
+        Destroy();
     }
 
     void MainFrame::OnExit(wxCommandEvent& event) {
