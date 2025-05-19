@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <map>
 #include <vector>
 
 #include <config/ApplicationConfig.hpp>
@@ -23,6 +22,8 @@ namespace EmuHub {
         bool checkROMHash(std::string romPath);
 
         std::vector<std::string> getLoadedROMPaths();
+
+        ROM getROM(std::string romPath);
     
     private:
         ApplicationConfig* config;

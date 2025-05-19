@@ -91,6 +91,15 @@ namespace EmuHub {
         return false;
     }
 
+    ROM ROMManager::getROM(std::string romPath) {
+        auto datGames = DATParser::get()->getDATGames();
+        for (auto [key, value] : datGames) {
+            for (auto game : value) {
+                
+            }
+        }
+    }
+
     std::vector<std::string> ROMManager::getLoadedROMPaths() {
         return romPaths;
     }

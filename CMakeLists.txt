@@ -13,7 +13,7 @@ CPMAddPackage("gh:gabime/spdlog@1.15.3")
 CPMAddPackage("gh:jeremy-rifkin/cpptrace#v0.8.3")
 CPMAddPackage("gh:stephenberry/glaze#v5.2.1")
 CPMAddPackage("gh:zeux/pugixml#v1.15")
-CPMAddPackage("gh:troldal/KZip#master")
+CPMAddPackage("gh:zlib-ng/minizip-ng#4.0.10")
 
 find_package(wxWidgets REQUIRED COMPONENTS net core base)
 if(wxWidgets_USE_FILE) # not defined in CONFIG mode
@@ -30,7 +30,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     cpptrace::cpptrace
     glaze::glaze
     pugixml::pugixml
-    KZip
+    minizip
     OpenSSL::Crypto
 
     ${wxWidgets_LIBRARIES}
