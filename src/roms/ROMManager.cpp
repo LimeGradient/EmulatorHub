@@ -1,18 +1,19 @@
 #include "roms/ROMManager.hpp"
 
 #include <fstream>
-#include <filesystem>
 #include <sstream>
 #include <iomanip>
 
 #include <glaze/glaze.hpp>
+#include <mz.h>
+#include <mz_strm.h>
+#include <mz_zip.h>
+#include <mz_zip_rw.h>
 #include <openssl/sha.h>
 #include <spdlog/spdlog.h>
 
 #include <config/ApplicationConfig.hpp>
 #include <roms/parsers/DATParser.hpp>
-
-namespace fs = std::filesystem;
 
 namespace EmuHub {
     void ROMManager::init() {
@@ -41,7 +42,7 @@ namespace EmuHub {
         romPaths.push_back(path);
     }
 
-    bool ROMManager::checkROMHash(std::string romPath) {
+    bool ROMManager::checkROMHash(std::string romPath, ConsoleType type) {
         std::ifstream file(romPath, std::ios::binary);
         if (!file.is_open()) {
             return false;
@@ -81,7 +82,7 @@ namespace EmuHub {
         std::string finalHash = os.str();
 
         auto datParser = DATParser::get();
-        auto games = datParser->getDATGames().at(ConsoleType::NintendoDS);
+        auto games = datParser->getDATGames().at(type);
         for (auto game : games) {
             if (game.hash == finalHash) {
                 return true;
@@ -91,13 +92,54 @@ namespace EmuHub {
         return false;
     }
 
-    ROM ROMManager::getROM(std::string romPath) {
+    ROM ROMManager::getROM(fs::path romPath) {
         auto datGames = DATParser::get()->getDATGames();
         for (auto [key, value] : datGames) {
-            for (auto game : value) {
+            if (this->checkROMHash(romPath.string(), key)) {
                 
             }
         }
+    }
+
+    std::vector<uint8_t> ROMManager::getROMLogo(fs::path romPath) {
+        std::vector<uint8_t> logo;
+
+        auto zipReader = mz_zip_reader_create();
+        if (!zipReader) {
+            return logo;
+        }
+
+        auto err = mz_zip_reader_open_file(zipReader, romPath.c_str());
+        if (err != MZ_OK) {
+            mz_zip_reader_delete(&zipReader);
+            return logo;
+        }
+
+        err = mz_zip_reader_locate_entry(zipReader, "logo.png", 0);
+        if (err != MZ_OK) {
+            mz_zip_reader_close(zipReader);
+            mz_zip_reader_delete(&zipReader);
+            return logo;
+        }
+
+        mz_zip_file* fileInfo = NULL;
+        err = mz_zip_reader_entry_get_info(zipReader, &fileInfo);
+        if (err != MZ_OK || fileInfo == NULL) {
+            mz_zip_reader_close(zipReader);
+            mz_zip_reader_delete(&zipReader);
+            return logo;
+        }
+
+        uint64_t uncompressedSize = fileInfo->uncompressed_size;
+        logo.reserve(uncompressedSize);
+        err = mz_zip_reader_entry_open(zipReader);
+        if (err != MZ_OK) {
+            mz_zip_reader_close(zipReader);
+            mz_zip_reader_delete(&zipReader);
+            return logo;
+        }
+
+        
     }
 
     std::vector<std::string> ROMManager::getLoadedROMPaths() {

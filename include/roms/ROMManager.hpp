@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <string>
 #include <vector>
 
@@ -7,6 +8,8 @@
 #include <roms/types/ConsoleTypes.hpp>
 #include <roms/types/DATGame.hpp>
 #include <roms/types/ROM.hpp>
+
+namespace fs = std::filesystem;
 
 namespace EmuHub {
     class ROMManager {
@@ -19,11 +22,13 @@ namespace EmuHub {
         void init();
 
         void addROMPath(std::string path);
-        bool checkROMHash(std::string romPath);
+        bool checkROMHash(std::string romPath, ConsoleType type);
 
         std::vector<std::string> getLoadedROMPaths();
 
-        ROM getROM(std::string romPath);
+        ROM getROM(fs::path romPath);
+
+        std::vector<uint8_t> getROMLogo(fs::path romPath);
     
     private:
         ApplicationConfig* config;

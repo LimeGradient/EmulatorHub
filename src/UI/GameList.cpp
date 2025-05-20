@@ -1,10 +1,19 @@
 #include "UI/GameList.hpp"
 
+#include <filesystem>
+
 #include <roms/ROMManager.hpp>
+
+namespace fs = std::filesystem;
 
 namespace EmuHub {
     GameList::GameList(wxWindow* parent, wxWindowID id) : wxScrolledWindow(parent, id) {
         auto romPaths = ROMManager::get()->getLoadedROMPaths();
+        for (auto path : romPaths) {
+            for (auto entry : fs::directory_iterator(path)) {
+                ROMManager::get()->getROM(entry.path());
+            }
+        }
 
         wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 

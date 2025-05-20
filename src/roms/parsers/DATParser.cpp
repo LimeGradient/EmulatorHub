@@ -14,7 +14,12 @@ namespace EmuHub {
             std::vector<DATGame> games;
             auto datafileNode = doc.child("datafile");
             for (auto game : datafileNode.select_nodes("//game")) {
-                auto datGame = DATGame(game.node().child("rom").attribute("sha256").value(), game.node().child("description").value());
+                auto datGame = DATGame(
+                    game.node().child("rom").attribute("sha256").value(), 
+                    game.node().child("description").value(),
+                    game.node().child("rom").attribute("name").value()
+                );
+                
                     games.push_back(datGame);
             }
 
